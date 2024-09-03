@@ -46,13 +46,6 @@ class Menu:
         top = Toplevel(self.master)
         top.title(app_class.__name__)
         app_class(top)
-        self.master.withdraw()  # Oculta a janela principal
-        top.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-    def on_closing(self):
-        self.master.deiconify()
 
 
-root = Tk()
-app = Menu(root)
-root.mainloop()
+
