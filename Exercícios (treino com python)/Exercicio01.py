@@ -1,3 +1,8 @@
+# Mensagem inicial
 print("Teste")
-x = input('Digite seu nome')
-print('O nome digitado é', x)
+
+# Coleta do nome do usuário
+nome = input('Digite seu nome: ')
+
+# Exibição do nome digitado
+print('O nome digitado é', nome)
