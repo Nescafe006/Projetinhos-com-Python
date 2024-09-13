@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-import Principal
+
 
 class Login:
     def __init__(self, master=None):
@@ -32,30 +32,23 @@ class Login:
         self.btnLogin = Button(self.container, text="Entrar", font=self.fonte, command=self.login, width=20, bg="#1877F2", fg="white")
         self.btnLogin.pack(pady=20)
 
+
+        self.user_data = {
+            "joao@example.com": "123",
+            "admin@example.com": "adminpass"
+        }
+
     def login(self):
         email = self.txtEmail.get()
         password = self.txtPassword.get()
 
-        if email and password:
-            # Fechar a tela de login
+        if email in self.user_data and self.user_data[email] == password:
             self.master.withdraw()
-
-            # Abrir a tela principal
             self.show_menu()
         else:
-            messagebox.showwarning("Aviso", "Preencha todos os campos!")
-
-    def show_menu(self):
-        # Criar a tela principal após o login
-        menu_root = Toplevel(self.master)
-        menu_root.title("Menu Principal")
-        menu_root.geometry("800x600")
-
-        # inicializar o conteúdo da tela principal
-        menu_app = Principal.Menu(menu_root)  
-
-
+            messagebox.showwarning("Aviso", "Email ou senha incorretos!")
 
 root = Tk()
 app = Login(master=root)
 root.mainloop()
+
