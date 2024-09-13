@@ -1,165 +1,315 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import os
+from usuarios import usuarios
 
-class Application:
+
+class cadastro:
     def __init__(self, master=None):
         self.master = master
-        self.fonte = ("Verdana", "8")
+        self.fontePadrao = ("Arial", "10")
 
+        self.primeiroContainer = Frame(master)
+        self.primeiroContainer.pack(pady=20)
 
-        self.container1 = Frame(master, pady=10)
-        self.container1.pack()
-        self.container2 = Frame(master, padx=20, pady=5)
-        self.container2.pack()
-        self.container3 = Frame(master, padx=20, pady=5)
-        self.container3.pack()
-        self.container4 = Frame(master, padx=20, pady=5)
-        self.container4.pack()
-        self.container5 = Frame(master, padx=20, pady=5)
-        self.container5.pack()
-        self.container6 = Frame(master, padx=20, pady=5)
-        self.container6.pack()
-        self.container7 = Frame(master, padx=20, pady=5)
-        self.container7.pack()
-        self.container8 = Frame(master, padx=20, pady=10)
-        self.container8.pack()
-        self.container9 = Frame(master, pady=15)
-        self.container9.pack()
+        self.container = Frame(master)
+        self.container.pack(pady=5, padx=20)
 
+        self.segundoContainer = Frame(master)
+        self.segundoContainer.pack(pady=5, padx=20)
 
-        self.titulo = Label(self.container1, text="Informe os dados :", font=("Calibri", "9", "bold"))
-        self.titulo.pack()
+        self.terceiroContainer = Frame(master)
+        self.terceiroContainer.pack(pady=5, padx=20)
 
-        self.lblidusuario = Label(self.container2, text="idUsuario:", font=self.fonte, width=10)
-        self.lblidusuario.pack(side=LEFT)
-        self.txtidusuario = Entry(self.container2, width=10, font=self.fonte)
-        self.txtidusuario.pack(side=LEFT)
-        self.btnBuscar = Button(self.container2, text="Buscar", font=self.fonte, width=10, command=self.buscarUsuario)
-        self.btnBuscar.pack(side=RIGHT)
+        self.quartoContainer = Frame(master)
+        self.quartoContainer.pack(pady=5, padx=20)
 
-        self.lblnome = Label(self.container3, text="Nome:", font=self.fonte, width=10)
-        self.lblnome.pack(side=LEFT)
-        self.txtnome = Entry(self.container3, width=25, font=self.fonte)
-        self.txtnome.pack(side=LEFT)
+        self.quintoContainer = Frame(master)
+        self.quintoContainer.pack(pady=5, padx=20)
 
-        self.lbltelefone = Label(self.container4, text="Telefone:", font=self.fonte, width=10)
-        self.lbltelefone.pack(side=LEFT)
-        self.txttelefone = Entry(self.container4, width=25, font=self.fonte)
-        self.txttelefone.pack(side=LEFT)
+        self.sextoContainer = Frame(master)
+        self.sextoContainer.pack(pady=5, padx=20)
 
-        self.lblemail = Label(self.container5, text="E-mail:", font=self.fonte, width=10)
-        self.lblemail.pack(side=LEFT)
-        self.txtemail = Entry(self.container5, width=25, font=self.fonte)
-        self.txtemail.pack(side=LEFT)
+        self.setimoContainer = Frame(master)
+        self.setimoContainer.pack(pady=10, padx=20)
 
-        self.lblusuario = Label(self.container6, text="Usuário:", font=self.fonte, width=10)
-        self.lblusuario.pack(side=LEFT)
-        self.txtusuario = Entry(self.container6, width=25, font=self.fonte)
-        self.txtusuario.pack(side=LEFT)
+        self.cad = Label(self.primeiroContainer, text="Cadastro de Usuarios")
+        self.cad.pack()
 
-        self.lblsenha = Label(self.container7, text="Senha:", font=self.fonte, width=10)
-        self.lblsenha.pack(side=LEFT)
-        self.txtsenha = Entry(self.container7, width=25, show="*", font=self.fonte)
-        self.txtsenha.pack(side=LEFT)
+        self.buscarID = Label(self.container, text="Buscar ID:", font=self.fontePadrao)
+        self.buscarID.pack(side=LEFT)
+        self.entID = Entry(self.container)
+        self.entID["width"] = 5
+        self.entID.pack(side=LEFT)
 
-        # Buttons
-        self.bntInsert = Button(self.container8, text="Inserir", font=self.fonte, width=12, command=self.inserirUsuario)
-        self.bntInsert.pack(side=LEFT)
+        self.botaoID = Button(self.container, text="Buscar")
+        self.botaoID["command"] = self.buscarUsuario
+        self.botaoID.pack(padx=5)
 
-        self.bntAlterar = Button(self.container8, text="Alterar", font=self.fonte, width=12, command=self.alterarUsuario)
-        self.bntAlterar.pack(side=LEFT)
+        self.txtNome = Label(self.segundoContainer, text="Nome: ", font=self.fontePadrao, width=10)
+        self.txtNome.pack(side=LEFT)
+        self.entNome = Entry(self.segundoContainer)
+        self.entNome["width"] = 25
+        self.entNome.pack(side=LEFT)
 
-        self.bntExcluir = Button(self.container8, text="Excluir", font=self.fonte, width=12, command=self.excluirUsuario)
-        self.bntExcluir.pack(side=LEFT)
+        self.txtTelefone = Label(self.terceiroContainer, text="Telefone:", font=self.fontePadrao, width=10)
+        self.txtTelefone.pack(side=LEFT)
+        self.entTelefone = Entry(self.terceiroContainer)
+        self.entTelefone["width"] = 25
+        self.entTelefone.pack()
 
-        self.lblmsg = Label(self.container9, text="", font=("Verdana", "9", "italic"))
-        self.lblmsg.pack()
+        self.txtEmail = Label(self.quartoContainer, text="Email:", font=self.fontePadrao, width=10)
+        self.txtEmail.pack(side=LEFT)
+        self.entEmail = Entry(self.quartoContainer)
+        self.entEmail["width"] = 25
+        self.entEmail.pack()
 
-        self.treeview_frame = Frame(master)
-        self.treeview_frame["padx"] = 100
-        self.treeview_frame["pady"] = 100
-        self.treeview_frame.pack()
+        self.txtUsuario = Label(self.quintoContainer, text="Usuario: ", font=self.fontePadrao, width=10)
+        self.txtUsuario.pack(side=LEFT)
+        self.entUsuario = Entry(self.quintoContainer)
+        self.entUsuario["width"] = 25
+        self.entUsuario.pack()
 
-        self.treeview = ttk.Treeview(self.treeview_frame, columns=("Nome", "Telefone", "E-mail", "Usuário", "Senha"),
-                                     show="headings", selectmode="browse")
+        self.txtSenha = Label(self.sextoContainer, text="Senha: ", font=self.fontePadrao, width=10)
+        self.txtSenha.pack(side=LEFT)
+        self.entSenha = Entry(self.sextoContainer)
+        self.entSenha["width"] = 25
+        self.entSenha["show"] = "*"
+        self.entSenha.pack()
 
-        self.treeview.heading("Nome", text="Nome")
-        self.treeview.heading("Telefone", text="Telefone")
-        self.treeview.heading("E-mail", text="E-mail")
-        self.treeview.heading("Usuário", text="Usuário")
-        self.treeview.heading("Senha", text="Senha")
+        self.botInsert = Button(self.setimoContainer, text="Inserir", width=12)
+        self.botInsert["command"] = self.inserirUsuario
+        self.botInsert.pack(side=LEFT)
 
-        self.treeview.pack()
+        self.botAlterar = Button(self.setimoContainer, text="Alterar", width=12)
+        self.botAlterar["command"] = self.alterarUsuario
+        self.botAlterar.pack(side=LEFT)
+
+        self.botExcluir = Button(self.setimoContainer, text="Excluir", width=12)
+        self.botExcluir["command"] = self.excluirUsuario
+        self.botExcluir.pack(side=LEFT)
+
+        self.botLimpar = Button(self.setimoContainer, text="Limpar", width=12)
+        self.botLimpar["command"] = self.limpar
+        self.botLimpar.pack(side=LEFT)
+
+        self.botPdf = Button(self.setimoContainer, text="PDF", width=12, command=self.criarPdf)
+        self.botPdf.pack(side=LEFT)
+
+        self.tree = self.createTreeView(master)
+
+    def limpar(self):
+
+        if self.entID.get() or self.entNome.get() or self.entTelefone.get() or self.entEmail.get() or self.entUsuario.get() or self.entSenha.get():
+            self.entID.delete(0, END)
+            self.entNome.delete(0, END)
+            self.entTelefone.delete(0, END)
+            self.entEmail.delete(0, END)
+            self.entUsuario.delete(0, END)
+            self.entSenha.delete(0, END)
+            messagebox.showinfo("", "Campos limpos")
 
     def inserirUsuario(self):
-        nome = self.txtnome.get()
-        telefone = self.txttelefone.get()
-        email = self.txtemail.get()
-        usuario = self.txtusuario.get()
-        senha = self.txtsenha.get()
+        user = usuarios()
 
-        if nome and telefone and email and usuario and senha:
-            self.treeview.insert("", "end", values=(nome, telefone, email, usuario, senha))
-            self.limparCampos()
-            messagebox.showinfo("Sucesso", "Usuário inserido com sucesso!")
+        if self.entNome.get() and self.entTelefone.get() and self.entEmail.get() and self.entUsuario.get() and self.entSenha.get():
+
+            user.nome = self.entNome.get()
+            user.telefone = self.entTelefone.get()
+            user.email = self.entEmail.get()
+            user.usuario = self.entUsuario.get()
+            user.senha = self.entSenha.get()
+
+            self.entID.delete(0, END)
+            self.entNome.delete(0, END)
+            self.entTelefone.delete(0, END)
+            self.entEmail.delete(0, END)
+            self.entUsuario.delete(0, END)
+            self.entSenha.delete(0, END)
+
+            result = user.insertUser()
+            messagebox.showinfo("Inserir", result)
         else:
-            messagebox.showwarning("Aviso", "Todos os campos devem ser preenchidos!")
+            messagebox.showwarning("Aviso", "Preencha todos os campos")
+
+        self.atualizarTreeView()
 
     def alterarUsuario(self):
-        selected_item = self.treeview.selection()
-        if selected_item:
-            nome = self.txtnome.get()
-            telefone = self.txttelefone.get()
-            email = self.txtemail.get()
-            usuario = self.txtusuario.get()
-            senha = self.txtsenha.get()
+        user = usuarios()
 
-            if nome and telefone and email and usuario and senha:
-                self.treeview.item(selected_item, values=(nome, telefone, email, usuario, senha))
-                self.limparCampos()
-                messagebox.showinfo("Sucesso", "Usuário alterado com sucesso!")
-            else:
-                messagebox.showwarning("Aviso", "Todos os campos devem ser preenchidos!")
+        if self.entID.get() and self.entNome.get() and self.entTelefone.get() and self.entEmail.get() and self.entUsuario.get() and self.entSenha.get():
+            user.id = self.entID.get()
+            user.nome = self.entNome.get()
+            user.telefone = self.entTelefone.get()
+            user.email = self.entEmail.get()
+            user.usuario = self.entUsuario.get()
+            user.senha = self.entSenha.get()
+
+            self.entID.delete(0, END)
+            self.entNome.delete(0, END)
+            self.entTelefone.delete(0, END)
+            self.entEmail.delete(0, END)
+            self.entUsuario.delete(0, END)
+            self.entSenha.delete(0, END)
+
+            result = user.updateUser()
+            messagebox.showinfo("Alterar", result)
         else:
-            messagebox.showwarning("Aviso", "Nenhum usuário selecionado para alterar!")
+            messagebox.showwarning("Aviso", "Preencha todos os campos")
+
+        self.atualizarTreeView()
 
     def excluirUsuario(self):
-        selected_item = self.treeview.selection()
-        if selected_item:
-            self.treeview.delete(selected_item)
-            self.limparCampos()
-            messagebox.showinfo("Sucesso", "Usuário excluído com sucesso!")
+        user = usuarios()
+
+        user.id = self.entID.get()
+
+        if self.entID.get():
+            result = user.deleteUser()
+            messagebox.showinfo("Excluir", result)
+
+            self.entID.delete(0, END)
+            self.entNome.delete(0, END)
+            self.entTelefone.delete(0, END)
+            self.entEmail.delete(0, END)
+            self.entUsuario.delete(0, END)
+            self.entSenha.delete(0, END)
         else:
-            messagebox.showwarning("Aviso", "Nenhum usuário selecionado para excluir!")
+            messagebox.showwarning("Aviso", "Selecione um ID para a exclusão")
+
+        self.atualizarTreeView()
 
     def buscarUsuario(self):
-        idusuario = self.txtidusuario.get()
-        if idusuario:
+        user = usuarios()
 
-            for item in self.treeview.get_children():
-                if self.treeview.item(item, 'values')[0] == idusuario:
-                    nome, telefone, email, usuario, senha = self.treeview.item(item, 'values')[1:]
-                    self.txtnome.delete(0, END)
-                    self.txtnome.insert(INSERT, nome)
-                    self.txttelefone.delete(0, END)
-                    self.txttelefone.insert(INSERT, telefone)
-                    self.txtemail.delete(0, END)
-                    self.txtemail.insert(INSERT, email)
-                    self.txtusuario.delete(0, END)
-                    self.txtusuario.insert(INSERT, usuario)
-                    self.txtsenha.delete(0, END)
-                    self.txtsenha.insert(INSERT, senha)
-                    messagebox.showinfo("Sucesso", "Usuário encontrado e dados carregados!")
-                    return
-            messagebox.showwarning("Não Encontrado", "Usuário não encontrado.")
+        user.id = self.entID.get()
+
+        if self.entID.get():
+            result = user.selectUser()
+            messagebox.showinfo("Busca", result)
+
+            self.entID.delete(0, END)
+            self.entID.insert(INSERT, user.id)
+
+            self.entNome.delete(0, END)
+            self.entNome.insert(INSERT, user.nome)
+
+            self.entTelefone.delete(0, END)
+            self.entTelefone.insert(INSERT, user.telefone)
+
+            self.entEmail.delete(0, END)
+            self.entEmail.insert(INSERT, user.email)
+
+            self.entUsuario.delete(0, END)
+            self.entUsuario.insert(INSERT, user.usuario)
+
+            self.entSenha.delete(0, END)
+            self.entSenha.insert(INSERT, user.senha)
         else:
-            messagebox.showwarning("Aviso", "Nenhum ID de usuário fornecido!")
+            messagebox.showwarning("Aviso", "Selecione um ID para a busca")
 
-    def limparCampos(self):
-        self.txtidusuario.delete(0, END)
-        self.txtnome.delete(0, END)
-        self.txttelefone.delete(0, END)
-        self.txtemail.delete(0, END)
-        self.txtusuario.delete(0, END)
-        self.txtsenha.delete(0, END)
+    def criarPdf(self):
+        user = usuarios()
+        dados = user.buscarTreeView()
+
+        c = canvas.Canvas("conteudo_usuarios.pdf", pagesize=letter)
+        path = "conteudo_usuarios.pdf"
+
+        largura, altura = letter
+        c.setFont("Helvetica", 10)
+
+        x = 100
+        y = altura - 50
+
+        c.drawString(x, y, "ID")
+        c.drawString(x + 50, y, "Nome")
+        c.drawString(x + 150, y, "Telefone")
+        c.drawString(x + 230, y, "Email")
+        c.drawString(x + 350, y, "Usuario")
+        c.drawString(x + 450, y, "Senha")
+
+        y -= 20
+
+        for linha in dados:
+            c.drawString(x, y, str(linha[0]))
+            c.drawString(x + 50, y, str(linha[1]))
+            c.drawString(x + 150, y, str(linha[2]))
+            c.drawString(x + 230, y, str(linha[3]))
+            c.drawString(x + 350, y, str(linha[4]))
+            c.drawString(x + 450, y, str(linha[5]))
+            y -= 15
+
+            if y < 50:
+                c.showPage()
+                c.setFont("Helvetica", 10)
+                y = altura - 50
+                c.drawString(x, y, "ID")
+                c.drawString(x + 50, y, "Nome")
+                c.drawString(x + 150, y, "Telefone")
+                c.drawString(x + 230, y, "Email")
+                c.drawString(x + 350, y, "Usuario")
+                c.drawString(x + 450, y, "Senha")
+                y -= 20
+
+        c.save()
+        os.startfile(path)
+
+    def createTreeView(self, root):
+
+        user = usuarios()
+
+        self.tree = ttk.Treeview(root, columns=("ID", "Nome", "Telefone", "Email", "Usuario", "Senha"), show="headings")
+        self.tree.heading("ID", text="ID")
+        self.tree.heading("Nome", text="Nome")
+        self.tree.heading("Telefone", text="Telefone")
+        self.tree.heading("Email", text="Email")
+        self.tree.heading("Usuario", text="Usuario")
+        self.tree.heading("Senha", text="Senha")
+        self.tree.bind("<<TreeviewSelect>>", self.selecionaUsuario)
+        self.tree.pack(fill=BOTH, expand=True)
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        rows = user.buscarTreeView()
+
+        for row in rows:
+            self.tree.insert("", END, values=row)
+
+        return self.tree
+
+    def atualizarTreeView(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        user = usuarios()
+        rows = user.buscarTreeView()
+
+        for row in rows:
+            self.tree.insert("", END, values=row)
+
+    def selecionaUsuario(self, event):
+        seleciona_item = self.tree.selection()
+        if seleciona_item:
+            item = seleciona_item[0]
+            values = self.tree.item(item, 'values')
+
+            self.entID.delete(0, END)
+            self.entID.insert(INSERT, values[0])
+
+            self.entNome.delete(0, END)
+            self.entNome.insert(INSERT, values[1])
+
+            self.entTelefone.delete(0, END)
+            self.entTelefone.insert(INSERT, values[2])
+
+            self.entEmail.delete(0, END)
+            self.entEmail.insert(INSERT, values[3])
+
+            self.entUsuario.delete(0, END)
+            self.entUsuario.insert(INSERT, values[4])
+
+            self.entSenha.delete(0, END)
+            self.entSenha.insert(INSERT, values[5])
