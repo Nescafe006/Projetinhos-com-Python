@@ -2,6 +2,7 @@ from tkinter import *
 import AppCidades
 import AppClientes
 import Appusuarios
+import tkinter as tk
 
 class Menu:
     def __init__(self, master):
@@ -34,7 +35,7 @@ class Menu:
         self.button_frame.pack(pady=10)
 
     def show_usuarios(self):
-        self.open_window(Appusuarios.Application)
+        self.open_window(Appusuarios.cadastro)
 
     def show_cidades(self):
         self.open_window(AppCidades.Application)
@@ -47,5 +48,8 @@ class Menu:
         top.title(app_class.__name__)
         app_class(top)
 
+root = Tk()
+app = Menu(root)
+root.mainloop()
 
 
